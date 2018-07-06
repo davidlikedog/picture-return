@@ -137,8 +137,11 @@ var PicReturn = /** @class */ (function () {
                 howLong = event.changedTouches[0].clientX - downX;
             }
             allPicture[0].style.left = currentX + howLong + "px";
+            allPicture[0].style.transition = "none";
             allPicture[allPicture.length - 1].style.left = currentLeftX + howLong + "px";
+            allPicture[allPicture.length - 1].style.transition = "none";
             allPicture[1].style.left = currentRightX + howLong + "px";
+            allPicture[1].style.transition = "none";
             goToNewPage = false;
         }
         this.pictureBox.onmousedown = function (event) {
