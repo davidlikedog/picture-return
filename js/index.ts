@@ -27,7 +27,6 @@ class PicReturn {
 
     getOneWidth() {
         this.oneWidth = this.pictureBox.childNodes[1].childNodes[1].clientWidth;
-        // this.oneWidth = this.pictureBox.getElementsByTagName('img')[0].clientWidth;
         this.oneHeight = this.pictureBox.childNodes[1].childNodes[1].clientHeight;
     }
 
@@ -35,14 +34,14 @@ class PicReturn {
         let i = 0;
         for (let one of this.pictureBox.childNodes) {
             if (one.nodeType === 1) {
-                one.style = this.threeStyle[2];
+                one.setAttribute("style", this.threeStyle[2]);
                 this.allPicture.push(one);
                 this.allPictureNormal.push(one);
                 i++;
             }
         }
-        this.allPicture[0].style = this.threeStyle[1];
-        this.allPicture[this.allPicture.length - 1].style = this.threeStyle[0];
+        this.allPicture[0].setAttribute("style", this.threeStyle[1]);
+        this.allPicture[this.allPicture.length - 1].setAttribute("style", this.threeStyle[0]);
     }
 
     getAllPoint() {
@@ -86,7 +85,7 @@ class PicReturn {
                 this.allPicture.unshift(one);
                 for (let s = 0; s < this.allPicture.length; s++) {
                     if (s > i) {
-                        this.allPicture[s].style = this.threeStyle[2];
+                        this.allPicture[s].setAttribute("style", this.threeStyle[2]);
                     }
                 }
                 this.run();
@@ -175,9 +174,9 @@ class PicReturn {
     }
 
     run() {
-        this.allPicture[0].style = this.threeStyle[0];
-        this.allPicture[1].style = this.threeStyle[1];
-        this.allPicture[2].style = this.threeStyle[2];
+        this.allPicture[0].setAttribute("style", this.threeStyle[0]);
+        this.allPicture[1].setAttribute("style", this.threeStyle[1]);
+        this.allPicture[2].setAttribute("style", this.threeStyle[2]);
         let one: any = this.allPicture.shift();
         this.allPicture.push(one);
         this.currentIndex++;
@@ -188,9 +187,9 @@ class PicReturn {
     }
 
     back() {
-        this.allPicture[0].style = this.threeStyle[2];
-        this.allPicture[this.allPicture.length - 1].style = this.threeStyle[1];
-        this.allPicture[this.allPicture.length - 2].style = this.threeStyle[0];
+        this.allPicture[0].setAttribute("style", this.threeStyle[2]);
+        this.allPicture[this.allPicture.length - 1].setAttribute("style", this.threeStyle[1]);
+        this.allPicture[this.allPicture.length - 2].setAttribute("style", this.threeStyle[0]);
         let one: any = this.allPicture.pop();
         this.allPicture.unshift(one);
         this.currentIndex--;

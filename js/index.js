@@ -22,7 +22,6 @@ var PicReturn = /** @class */ (function () {
     }
     PicReturn.prototype.getOneWidth = function () {
         this.oneWidth = this.pictureBox.childNodes[1].childNodes[1].clientWidth;
-        // this.oneWidth = this.pictureBox.getElementsByTagName('img')[0].clientWidth;
         this.oneHeight = this.pictureBox.childNodes[1].childNodes[1].clientHeight;
     };
     PicReturn.prototype.fixOnesLocation = function () {
@@ -30,14 +29,14 @@ var PicReturn = /** @class */ (function () {
         for (var _i = 0, _a = this.pictureBox.childNodes; _i < _a.length; _i++) {
             var one = _a[_i];
             if (one.nodeType === 1) {
-                one.style = this.threeStyle[2];
+                one.setAttribute("style", this.threeStyle[2]);
                 this.allPicture.push(one);
                 this.allPictureNormal.push(one);
                 i++;
             }
         }
-        this.allPicture[0].style = this.threeStyle[1];
-        this.allPicture[this.allPicture.length - 1].style = this.threeStyle[0];
+        this.allPicture[0].setAttribute("style", this.threeStyle[1]);
+        this.allPicture[this.allPicture.length - 1].setAttribute("style", this.threeStyle[0]);
     };
     PicReturn.prototype.getAllPoint = function () {
         if (this.pointsBox !== null) {
@@ -79,7 +78,7 @@ var PicReturn = /** @class */ (function () {
                 _this.allPicture.unshift(one);
                 for (var s = 0; s < _this.allPicture.length; s++) {
                     if (s > i) {
-                        _this.allPicture[s].style = _this.threeStyle[2];
+                        _this.allPicture[s].setAttribute("style", _this.threeStyle[2]);
                     }
                 }
                 _this.run();
@@ -173,9 +172,9 @@ var PicReturn = /** @class */ (function () {
         };
     };
     PicReturn.prototype.run = function () {
-        this.allPicture[0].style = this.threeStyle[0];
-        this.allPicture[1].style = this.threeStyle[1];
-        this.allPicture[2].style = this.threeStyle[2];
+        this.allPicture[0].setAttribute("style", this.threeStyle[0]);
+        this.allPicture[1].setAttribute("style", this.threeStyle[1]);
+        this.allPicture[2].setAttribute("style", this.threeStyle[2]);
         var one = this.allPicture.shift();
         this.allPicture.push(one);
         this.currentIndex++;
@@ -186,9 +185,9 @@ var PicReturn = /** @class */ (function () {
             this.changePointColor(this.allPoint, this.currentIndex);
     };
     PicReturn.prototype.back = function () {
-        this.allPicture[0].style = this.threeStyle[2];
-        this.allPicture[this.allPicture.length - 1].style = this.threeStyle[1];
-        this.allPicture[this.allPicture.length - 2].style = this.threeStyle[0];
+        this.allPicture[0].setAttribute("style", this.threeStyle[2]);
+        this.allPicture[this.allPicture.length - 1].setAttribute("style", this.threeStyle[1]);
+        this.allPicture[this.allPicture.length - 2].setAttribute("style", this.threeStyle[0]);
         var one = this.allPicture.pop();
         this.allPicture.unshift(one);
         this.currentIndex--;
