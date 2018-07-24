@@ -30,7 +30,6 @@ class PicReturn {
         this.allPicture = [];
         this.allPoint = [];
         this.allPictureNormal = [];
-        // this.threeStyle = [];
         this.currentIndex = 0;
         if (pointsClass !== null) {
             this.pointsBox = document.getElementsByClassName(this.pointsClass)[0];
