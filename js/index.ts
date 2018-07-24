@@ -8,7 +8,21 @@ class PicReturn {
     private readonly allPictureNormal: Array<any>;
     private time: number;
     private currentIndex: number;
-    private readonly threeStyle: Array<string>;
+    private threeStyle: any = {
+        left: null,
+        middle: null,
+        right: null
+    };
+    private mouseData: any = {
+        isMouseDown: null,
+        downX: null,
+        goToNewPage: null,
+        currentX: 0,
+        currentLeftX: null,
+        currentRightX: null,
+        upX: null
+
+    };
 
     constructor(private className: string, private timeOut: number = null, private pointsClass: string = null,
                 private pointSelectStyle: string = null) {
@@ -16,7 +30,7 @@ class PicReturn {
         this.allPicture = [];
         this.allPoint = [];
         this.allPictureNormal = [];
-        this.threeStyle = [];
+        // this.threeStyle = [];
         this.currentIndex = 0;
         if (pointsClass !== null) {
             this.pointsBox = document.getElementsByClassName(this.pointsClass)[0];
@@ -34,14 +48,14 @@ class PicReturn {
         let i = 0;
         for (let one of this.pictureBox.childNodes) {
             if (one.nodeType === 1) {
-                one.setAttribute("style", this.threeStyle[2]);
+                one.setAttribute("style", this.threeStyle.right);
                 this.allPicture.push(one);
                 this.allPictureNormal.push(one);
                 i++;
             }
         }
-        this.allPicture[0].setAttribute("style", this.threeStyle[1]);
-        this.allPicture[this.allPicture.length - 1].setAttribute("style", this.threeStyle[0]);
+        this.allPicture[0].setAttribute("style", this.threeStyle.middle);
+        this.allPicture[this.allPicture.length - 1].setAttribute("style", this.threeStyle.left);
     }
 
     getAllPoint() {
@@ -85,7 +99,7 @@ class PicReturn {
                 this.allPicture.unshift(one);
                 for (let s = 0; s < this.allPicture.length; s++) {
                     if (s > i) {
-                        this.allPicture[s].setAttribute("style", this.threeStyle[2]);
+                        this.allPicture[s].setAttribute("style", this.threeStyle.right);
                     }
                 }
                 this.run();
@@ -94,6 +108,19 @@ class PicReturn {
                 this.interval();
             });
         }
+    }
+
+    down(event, time, touch: boolean = false) {
+        this.mouseData.currentLeftX = -this.oneWidth;
+        this.mouseData.currentRightX = this.oneWidth;
+        if (!touch) {
+            this.mouseData.isMouseDown = true;
+            this.mouseData.downX = event.clientX;
+        } else {
+            this.mouseData.downX = event.changedTouches[0].clientX
+        }
+        clearInterval(time);
+        this.mouseData.goToNewPage = true;
     }
 
     mouseUp(goToNewPage, upX, downX, touch: boolean = false) {
@@ -107,76 +134,57 @@ class PicReturn {
         this.interval();
     }
 
+    move(event, allPicture, touch: boolean = false) {
+        let howLong: number = 0;
+        if (!touch) {
+            howLong = event.clientX - this.mouseData.downX;
+        } else {
+            howLong = event.changedTouches[0].clientX - this.mouseData.downX;
+        }
+        allPicture[0].style.left = `${this.mouseData.currentX + howLong}px`;
+        allPicture[0].style.transition = `none`;
+        allPicture[allPicture.length - 1].style.left = `${this.mouseData.currentLeftX + howLong}px`;
+        allPicture[allPicture.length - 1].style.transition = `none`;
+        allPicture[1].style.left = `${this.mouseData.currentRightX + howLong}px`;
+        allPicture[1].style.transition = `none`;
+        this.mouseData.goToNewPage = false;
+    }
+
     mouseDirection() {
-        let downX: number = 0;
-        let upX: number = 0;
-        let currentX: number = 0;
-        let currentLeftX: number = -this.oneWidth;
-        let currentRightX: number = this.oneWidth;
-        let goToNewPage: boolean = false;
-        let isMouseDown: boolean = false;
-
-        function down(event, time, touch: boolean = false) {
-            if (!touch) {
-                isMouseDown = true;
-                downX = event.clientX;
-            } else {
-                downX = event.changedTouches[0].clientX
-            }
-            clearInterval(time);
-            goToNewPage = true;
-        }
-
-        function move(event, allPicture, touch: boolean = false) {
-            let howLong: number = 0;
-            if (!touch) {
-                howLong = event.clientX - downX;
-            } else {
-                howLong = event.changedTouches[0].clientX - downX;
-            }
-            allPicture[0].style.left = `${currentX + howLong}px`;
-            allPicture[0].style.transition = `none`;
-            allPicture[allPicture.length - 1].style.left = `${currentLeftX + howLong}px`;
-            allPicture[allPicture.length - 1].style.transition = `none`;
-            allPicture[1].style.left = `${currentRightX + howLong}px`;
-            allPicture[1].style.transition = `none`;
-            goToNewPage = false;
-        }
-
         this.pictureBox.onmousedown = (event) => {
             if (event.buttons === 1) {
-                down(event, this.time);
+                this.down(event, this.time);
             }
         };
         this.pictureBox.onmousemove = (event) => {
-            if (isMouseDown && event.buttons === 1) {
-                move(event, this.allPicture);
+            if (this.mouseData.isMouseDown && event.buttons === 1) {
+                this.move(event, this.allPicture);
             }
         };
         this.pictureBox.onmouseup = (event) => {
             if (event.button === 0) {
-                isMouseDown = false;
-                upX = event.clientX;
-                this.mouseUp(goToNewPage, upX, downX);
+                this.mouseData.isMouseDown = false;
+                this.mouseData.upX = event.clientX;
+                this.mouseUp(this.mouseData.goToNewPage, this.mouseData.upX, this.mouseData.downX);
             }
         };
 
         this.pictureBox.ontouchstart = (event) => {
-            down(event, this.time, true);
+            this.down(event, this.time, true);
         };
         this.pictureBox.ontouchmove = (event) => {
-            move(event, this.allPicture, true);
+            this.move(event, this.allPicture, true);
         };
         this.pictureBox.ontouchend = (event) => {
-            upX = event.changedTouches[0].clientX;
-            this.mouseUp(goToNewPage, upX, downX, true);
+            this.mouseData.upX = event.changedTouches[0].clientX;
+            this.mouseUp(this.mouseData.goToNewPage, this.mouseData.upX, this.mouseData.downX, true);
         };
     }
 
     run() {
-        this.allPicture[0].setAttribute("style", this.threeStyle[0]);
-        this.allPicture[1].setAttribute("style", this.threeStyle[1]);
-        this.allPicture[2].setAttribute("style", this.threeStyle[2]);
+        this.allPicture[0].setAttribute("style", this.threeStyle.left);
+        this.allPicture[1].setAttribute("style", this.threeStyle.middle);
+        this.allPicture[2].setAttribute("style", this.threeStyle.right);
         let one: any = this.allPicture.shift();
         this.allPicture.push(one);
         this.currentIndex++;
@@ -187,9 +195,9 @@ class PicReturn {
     }
 
     back() {
-        this.allPicture[0].setAttribute("style", this.threeStyle[2]);
-        this.allPicture[this.allPicture.length - 1].setAttribute("style", this.threeStyle[1]);
-        this.allPicture[this.allPicture.length - 2].setAttribute("style", this.threeStyle[0]);
+        this.allPicture[0].setAttribute("style", this.threeStyle.right);
+        this.allPicture[this.allPicture.length - 1].setAttribute("style", this.threeStyle.middle);
+        this.allPicture[this.allPicture.length - 2].setAttribute("style", this.threeStyle.left);
         let one: any = this.allPicture.pop();
         this.allPicture.unshift(one);
         this.currentIndex--;
@@ -200,15 +208,24 @@ class PicReturn {
     }
 
     setThreeStyle() {
-        this.threeStyle.push(`position: absolute;left: -${this.oneWidth}px;top: 0;z-index: -1;`);
-        this.threeStyle.push(`position: absolute;left: 0;top: 0;z-index: 1;`);
-        this.threeStyle.push(`position: absolute;left: ${this.oneWidth}px;top: 0;z-index: -1;`);
+        this.threeStyle.left = `position: absolute;left: -${this.oneWidth}px;top: 0;z-index: -1;`;
+        this.threeStyle.middle = `position: absolute;left: 0;top: 0;z-index: 1;`;
+        this.threeStyle.right = `position: absolute;left: ${this.oneWidth}px;top: 0;z-index: -1;`;
     }
 
     interval() {
         this.time = setInterval(() => {
             this.run();
         }, this.timeOut);
+    }
+
+    widthChangeFixHeight() {
+        this.pictureBox.style.height = this.oneHeight + 'px';
+        window.onresize = () => {
+            this.getOneWidth();
+            this.setThreeStyle();
+            this.pictureBox.style.height = this.oneHeight + 'px';
+        };
     }
 
     start() {
@@ -219,7 +236,7 @@ class PicReturn {
         this.getAllPoint();
         if (this.pointsBox !== null) this.changePointColor(this.allPoint, this.currentIndex);
         this.pointGuide();
-        this.pictureBox.style.height = this.oneHeight + 'px';
+        this.widthChangeFixHeight();
         this.mouseDirection();
         this.interval();
     }
