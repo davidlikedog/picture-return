@@ -78,27 +78,40 @@ var PicReturn = /** @class */ (function () {
         }
         pointArr[currentIndex].classList.add(this.pointSelectStyle);
     };
+    PicReturn.prototype.pointGuideCommonMethod = function (i) {
+        clearInterval(this.time);
+        this.currentIndex = i - 1;
+        var sliceElseFirst = this.allPictureNormal.slice(0, i);
+        var sliceElseSecond = this.allPictureNormal.slice(i);
+        this.allPicture = sliceElseSecond.concat(sliceElseFirst);
+        var one = this.allPicture.pop();
+        this.allPicture.unshift(one);
+        for (var s = 0; s < this.allPicture.length; s++) {
+            if (s > i) {
+                this.allPicture[s].setAttribute("style", this.threeStyle.right);
+            }
+        }
+        this.run();
+    };
     PicReturn.prototype.pointGuide = function () {
         var _this = this;
         var _loop_1 = function (i) {
-            this_1.allPoint[i].addEventListener('mouseover', function () {
-                clearInterval(_this.time);
-                _this.currentIndex = i - 1;
-                var sliceElseFirst = _this.allPictureNormal.slice(0, i);
-                var sliceElseSecond = _this.allPictureNormal.slice(i);
-                _this.allPicture = sliceElseSecond.concat(sliceElseFirst);
-                var one = _this.allPicture.pop();
-                _this.allPicture.unshift(one);
-                for (var s = 0; s < _this.allPicture.length; s++) {
-                    if (s > i) {
-                        _this.allPicture[s].setAttribute("style", _this.threeStyle.right);
-                    }
-                }
-                _this.run();
-            });
-            this_1.allPoint[i].addEventListener('mouseout', function () {
-                _this.interval();
-            });
+            if (/Android|webOS|iPhone|iPod|BlackBerry/i.test(navigator.userAgent)) {
+                this_1.allPoint[i].addEventListener('touchstart', function () {
+                    _this.pointGuideCommonMethod(i);
+                });
+                this_1.allPoint[i].addEventListener('touchend', function () {
+                    _this.interval();
+                });
+            }
+            else {
+                this_1.allPoint[i].addEventListener('mouseover', function () {
+                    _this.pointGuideCommonMethod(i);
+                });
+                this_1.allPoint[i].addEventListener('mouseout', function () {
+                    _this.interval();
+                });
+            }
         };
         var this_1 = this;
         for (var i = 0; i < this.allPoint.length; i++) {

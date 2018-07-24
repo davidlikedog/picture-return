@@ -86,26 +86,39 @@ class PicReturn {
         pointArr[currentIndex].classList.add(this.pointSelectStyle);
     }
 
+    pointGuideCommonMethod(i) {
+        clearInterval(this.time);
+        this.currentIndex = i - 1;
+        let sliceElseFirst: Array<any> = this.allPictureNormal.slice(0, i);
+        let sliceElseSecond: Array<any> = this.allPictureNormal.slice(i);
+        this.allPicture = sliceElseSecond.concat(sliceElseFirst);
+        let one: any = this.allPicture.pop();
+        this.allPicture.unshift(one);
+        for (let s = 0; s < this.allPicture.length; s++) {
+            if (s > i) {
+                this.allPicture[s].setAttribute("style", this.threeStyle.right);
+            }
+        }
+        this.run();
+    }
+
     pointGuide() {
         for (let i = 0; i < this.allPoint.length; i++) {
-            this.allPoint[i].addEventListener('mouseover', () => {
-                clearInterval(this.time);
-                this.currentIndex = i - 1;
-                let sliceElseFirst: Array<any> = this.allPictureNormal.slice(0, i);
-                let sliceElseSecond: Array<any> = this.allPictureNormal.slice(i);
-                this.allPicture = sliceElseSecond.concat(sliceElseFirst);
-                let one: any = this.allPicture.pop();
-                this.allPicture.unshift(one);
-                for (let s = 0; s < this.allPicture.length; s++) {
-                    if (s > i) {
-                        this.allPicture[s].setAttribute("style", this.threeStyle.right);
-                    }
-                }
-                this.run();
-            });
-            this.allPoint[i].addEventListener('mouseout', () => {
-                this.interval();
-            });
+            if (/Android|webOS|iPhone|iPod|BlackBerry/i.test(navigator.userAgent)) {
+                this.allPoint[i].addEventListener('touchstart', () => {
+                    this.pointGuideCommonMethod(i);
+                });
+                this.allPoint[i].addEventListener('touchend', () => {
+                    this.interval();
+                });
+            } else {
+                this.allPoint[i].addEventListener('mouseover', () => {
+                    this.pointGuideCommonMethod(i);
+                });
+                this.allPoint[i].addEventListener('mouseout', () => {
+                    this.interval();
+                });
+            }
         }
     }
 
