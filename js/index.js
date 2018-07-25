@@ -86,7 +86,6 @@ var PicReturn = /** @class */ (function () {
         this.allPicture = sliceElseSecond.concat(sliceElseFirst);
         var one = this.allPicture.pop();
         this.allPicture.unshift(one);
-        console.log(i);
         for (var s = 0; s < this.allPicture.length; s++) {
             if (s > i) {
                 this.allPictureNormal[s].setAttribute("style", this.threeStyle.right);
