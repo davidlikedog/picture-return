@@ -94,9 +94,12 @@ class PicReturn {
         this.allPicture = sliceElseSecond.concat(sliceElseFirst);
         let one: any = this.allPicture.pop();
         this.allPicture.unshift(one);
+        console.log(i);
         for (let s = 0; s < this.allPicture.length; s++) {
             if (s > i) {
-                this.allPicture[s].setAttribute("style", this.threeStyle.right);
+                this.allPictureNormal[s].setAttribute("style", this.threeStyle.right);
+            } else if (s < i) {
+                this.allPictureNormal[s].setAttribute("style", this.threeStyle.left);
             }
         }
         this.run();
