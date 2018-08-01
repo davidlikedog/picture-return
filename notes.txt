@@ -1,0 +1,378 @@
+css 新属性：
+
+粘贴定位，当该元素的top值没到0的时候定位为reletive，到达后定位为fix，且top值为0，最好加个webkit前缀
+position: sticky;
+top: 0;
+
+表示当前元素下的文本是否可以选中，none为不可选中
+user-select:none
+
+div下的文字选中颜色为pink
+div::selection{
+    color: pink;
+}
+
+div的宽度为100%-100px
+div{
+    width: calc(100% - 100px);
+}
+
+裁剪图片
+div{
+    clip: rect(10px 50px 200px 0px);
+}
+div{
+    clip-path: circle(50%);
+}
+
+q标签用于引用，引号
+q:lang(en){
+    quotes: '"' '"' "'" "'"
+}
+
+
+一 使用angular mterial ui库
+npm install --save @angular/material @angular/cdk
+// npm install --save @angular/animations
+npm install --save hammerjs
+// npm install --save angular/material2-builds angular/cdk-builds
+ng g module ebiz-material -app=ebiz-ui
+
+安装一系列文件
+
+ebiz-material
+import需要的部件，再export该部件，再把该文件在app-module里面引用
+
+style.css
+@import "~@angular/material/prebuilt-themes/indigo-pink.css";
+
+main.ts
+import 'hammerjs';
+
+index.html
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+注意：必须使用npm下载安装，cnpm有问题，安装完毕后最好看下package.json
+
+二 webpack打包步骤
+npm init -y
+cnpm install webpack --save-dev
+cnpm install less typescript less-loader style-loader css-loader ts-loader webpack-dev-server webpack-cli --save-dev
+加入tsconfig.json 底部有例子
+加入webpack.config.js  底部有例子
+webpack
+
+注意检查package.json
+
+启动webpack-dev-server实现自动刷新页面功能
+
+package.json下的scripts:
+"scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "webpack",
+    "server": "webpack-dev-server --open"
+  },
+
+webpack.config.js里和input，output平级加:
+devServer: {
+        contentBase: "./show",//本地服务器所加载的页面所在的目录
+        historyApiFallback: false,//不跳转
+        inline: true,//实时刷新
+    },
+
+output里加:
+output: {
+        path: path.join(__dirname, "/show/dist"),
+        filename: "bundle.js",
+        publicPath: '/assets/'
+    },
+
+index.html里引用js:
+<script src="assets/bundle.js"></script>
+
+
+tsconfig.json:
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "es5",
+    "sourceMap": true
+  },
+  "exclude": [
+    "node_modules"
+  ]
+}
+
+
+webpack.config.js:
+const path = require("path");
+module.exports = {
+    entry: __dirname + "/show/app/app.js",  //入口文件，里需要import '...';
+    output: {  //出口文件
+        path: path.join(__dirname, "/show/dist"),
+        filename: "bundle.js",
+        publicPath: '/assets/'  //给webpack服务器用的内存里的js
+    },
+    devServer: {  //webpack服务器的配置
+        contentBase: "./show",//本地服务器所加载的页面所在的目录
+        historyApiFallback: false,//不跳转
+        inline: true,//实时刷新
+    },
+    module: {
+        rules: [
+            {
+                test: /\.less$/,
+                use: [{loader: "style-loader"}, {loader: "css-loader"}, {loader: "less-loader"}]
+            },
+            {
+                test: /\.css$/,
+                use: [{loader: "style-loader"}, {loader: "css-loader"}]
+            },
+            {
+                test: /\.ts$/,
+                loader: "ts-loader"
+            }
+        ]
+    },
+};
+
+
+CKEditor 5  富文本框的使用 官网（https://docs.ckeditor.com）
+index.html
+<script src="http://cdn.ckeditor.com/ckeditor5/10.1.0/classic/ckeditor.js"></script>
+
+需要富文本框的地方（html）：
+<textarea name="content" id="editor">
+  <p>this is old msg</p>
+</textarea>
+
+需要富文本框的地方（js）：
+ngOnInit() {
+    const editor: any = document.getElementById('editor');
+    ClassicEditor.create(editor, {
+      // toolbar: ['heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'blockQuote'],
+      ckfinder: {
+        // 返回的数据格式return json([‘uploaded’=>true,’url’=>$url]);
+        uploadUrl: 'http://localhost?act=uploadImg'
+      },
+      language: 'zh-cn'
+    }).then(ed => {
+      this.myEditor = ed;
+      console.log(ed);
+    }).catch(error => {
+      console.error(error);
+    });
+  }
+
+// 得到内容以及设置内容
+ getContent() {
+    console.log(this.myEditor.getData());
+    this.content = this.myEditor.getData();
+    // this.content = this.myEditor.setData(`<p>this is p</p>`);
+  }
+
+需要渲染的地方：
+注意：必须在class为ck-content里才可以实现样式，innerHTML是为了编译html
+<div class="ck-content" [innerHTML]="content"></div>
+
+
+angular中使用less: ng new [name] --style less
+
+
+Content-Type四个常用值的使用:
+application/x-www-form-urlencoded 
+最常用的post请求方式，浏览器原生form表单就是这个，传值以:key1=val1&key2=val2的结构
+
+multipart/form-data 
+一个常见的用post来传文件的格式，如果是form表单传需要添加enctyped="multipart/form-data"
+
+application/json
+用来告诉服务器消息主体是序列化后的json字符串，php获取该json数据比较麻烦。其他语言不了解
+
+text/xml
+XML 作为编码方式的远程调用规范。
+
+少了linux
+
+linux指令:
+ls：列出当前路径下的文件
+ls /root：列出root下的文件
+ls -l /root：显示更详细
+ls -la /root：更详细加隐藏的文件
+ls -lh /root：把所占空间用更合理的方式显示
+
+pwd：显示当前路径(print working directory)
+
+cd：切换路径
+cd:~ 切换到用户家目录
+
+mkdir mine：新建一个文件夹，名字叫mine(make directory)
+mkdir /root/mine：在root下新建一个mine文件夹
+mkdir -p /root/mine/a/b：如果目录不存在就创建
+mkdir a b c：同时创建多个文件夹
+
+文件夹颜色识别：
+蓝色表示文件夹，黑色表示文件，绿色表示其拥有所有权限
+
+touch：创建文件
+touch /root/mine.txt
+
+cp 被复制的文档路径 粘贴位置路径：复制文件，且可以改名字(copy)
+当使用cp复制文件夹的时候需要加上-r，递归复制
+
+mv 需要移动的文档路径 保存位置的路径：移动，剪切，重命名(move)
+
+rm：移除，删除文件
+rm -rf /root/home：直接删除home文件夹，-f强迫，-r递归
+rm *.txt：删除后缀名为.txt的文件
+
+vim 路径：文本编辑器
+退出：shift+: q
+
+输出重定向：
+>：覆盖原来的文件内容
+>>：追加输出，不会覆盖原始文件内容
+ls -la > ls.txt：输出结果，并保存到ls.txt中去
+
+cat：直接打开一个文件，对文件进行合并
+cat 文件的路径 
+cat 待合并的文件路径1 待合并的文件路径2 > 放到哪里去 (把两个txt合并为一个txt)
+
+df -h：查看磁盘空间
+
+free -m：表示内存使用情况
+
+head -n 需要查看的文件路径：查看一个文件的前n行，默认显示前10行
+
+tail -n：查看一个文件的末尾n行，默认显示后10行
+tail -f 文件路径：查看一个文件的动态变化
+
+less 需要查看的文件路径：查看文件，以较少的内容进行输出
+辅助功能-- :10 - 从第10行   空格 - 翻页  上下键 - 一行一行翻页
+
+wc：统计文件内容信息（包括行数，单词数，字节数）
+wc -lwc 文件路径：l：line  w：words  c：bytes
+
+date：读取和设置时间
+date +%F：输出常用的时间格式
+date +"%Y-%m-%d %H:%M:%S"：输出年月日 时分秒
+date +"%F%T"：输出年月日 时分秒
+date -d "-1 day" +"%Y-%m-%d %H:%M:%S"
+
+cal：操作日历
+cal -3：输出三个月的日历
+cal -y 2018：输出2018年的日历
+
+clear/ctrl+l：清屏
+
+管道符：|
+ls / | grep y：输出有y的文件
+
+hostname：主机名
+hostname -f：表示输出当前主机名中的FQDN(全限定域名)
+
+id：用于查看一个用户的基本信息（用户id，用户组id，附加组id）
+id 想查询的用户信息：查询你想知道的用户的信息
+
+whoami：我是谁，显示当前登录的用户名
+
+ps -ef：显示进程
+UID：该进程执行用户的id
+PID：进程id
+PPID：该进程的父级进程id，找不到该程序就没用
+C：cpu占用率，%为单位
+STIME：进行的启动时间
+TTY：终端设备，发起该进程的设备识别符号，？表示不是由终端设备发起
+TIME：该进程的执行时间
+CMD：进程的名称 或对应的路径
+
+top：查看服务器的进程占的资源
+退出：q
+
+du-sh：查看目录的真实大小
+-s：只显示汇总的大小
+-h：以高可读性的形式进行显示
+du-sh /root/mine：mine目录的实际大小
+
+find：用于查找文件
+find 路径范围 选项 选项的值
+选项：-name 按照文档名称进行搜索（可模糊） -type 文档类型
+find /etc -name *.config
+find /etc -type f(注：f：file，d：directory)
+
+service 服务名 start/stop/restart：用于控制一些软件的服务启动/停止/重启
+
+killall 进程名称：杀死进程
+
+ifconfig：查看网络参数
+
+reboot：重启
+reboot -w：模拟重启，但不重启（只写关机与开机的日志信息）
+
+shutdown：关机（慎用）
+shutdown -h now：立即关机
+shutdown -h 15:30 “提示语句”：定时关机
+
+uptime：输出计算机持续在线时间
+
+uname：获取操作系统的类型
+uname -a：更详细的信息
+
+netstat -tnlp：网络连接状态
+t：表示只列出tcp协议的连接
+n：表示显示端口号
+l：过滤出‘state’列中值为listen的连接
+p：显示pid，进程
+
+man：手册（包含了Linux中的全部命令手册）
+man 命令（退出按下q）
+
+ctrl+u：清空你写的命令
+
+vim编辑器（命令模式，编辑模式，末行模式）
+打开文件
+vim 文件路径：打开指定的文件
+vim +数字 文件的路径：打开指定的文件，并将光标移动到指定行
+vim +/关键词 文件的路径：打开指定的文件，并且高亮显示关键词
+vim 文件1 文件2 文件3：同时打开多个文件
+光标移动到行首：shift+6
+光标移动号行尾：shift+4
+光标移动到首行：gg
+光标移动到末行：G
+向上翻屏：ctrl+b
+向下翻屏：ctrl+f
+复制光标所在行：yy
+粘贴：想要粘贴的地方按下p键
+复制多行（包括光标所在行）：数字yy
+可视化复制：ctrl+v -> 上下左右选 ->  yy -> p粘贴
+剪切当前行：[n]dd  ，D：删除当前行，删除后显示空行
+撤销-> :U
+恢复之前的撤销：ctrl+r
+将光标移动到10行：10G 或:10+回车
+以当前光标为准，向上下左右移动n行：数字↑，数字↓，数字←，数字→
+末行模式 -> :
+退出末行模式：esc，连按两次esc，删除所有
+保存 -> :w
+另存为 -> :w 路径
+退出（quit）-> :q
+保存并退出 -> :wq
+强制退出，不保存 -> :q!
+查找 -> /关键词
+在搜索结果中切换上/下一个：N/n
+取消高亮（no hightlight） -> :nohl
+替换一处 -> :s/需要替换的词/新词
+替换光标所在行的内容 -> :s/需要替换的词/新词/g
+全文替换 -> :%s/关键词/替换关键词/g
+显示行号 -> :set nu
+隐藏行号 -> :set nonu
+同时打开多个文件，并在末行模式切换文件
+1：先查看当前文件 -> :files  (%a表示当前正在打开的文件，#：上一个打开的文件)
+2：切换文件的方式
+	打开指定文件 -> :open 文件名
+	切换下一个文件 -> :bn  (back next)
+	切换上一个文件 -> :bp  (back prev)
+编辑模式  进入方式：i/a  ，退出：esc
+控制着色显示与否
+	显示 -> :syntax on
+	隐藏 -> :syntax off
+vim中计算器的使用
