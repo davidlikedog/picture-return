@@ -25,5 +25,5 @@
   
   4：加链接可以往html里的location自定义属性里加，不需要链接可以不加。
   
-  5：实测iPhone和安卓可以运行，pc兼容不了ie10以下的浏览器。
+  5：实测iPhone和安卓可以运行，pc端ie9及以下版本由于不支持flex，和transition，所以跑不起来。
   
