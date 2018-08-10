@@ -62,11 +62,12 @@ var PicReturn = /** @class */ (function () {
     };
     PicReturn.prototype.loopPoint = function () {
         if (this.pointsBox !== null) {
-            var pointClassName = this.pointsBox.childNodes[1].classList[0];
+            this.pointClassName = this.pointsBox.childNodes[1].className;
             for (var i = 0; i < this.allPicture.length - 1; i++) {
                 this.pointsBox.appendChild(this.pointsBox.childNodes[1]);
                 var onePoint = document.createElement('div');
-                onePoint.classList.add(pointClassName);
+                // onePoint.classList.add(pointClassName);
+                onePoint.setAttribute("class", this.pointClassName);
                 this.pointsBox.appendChild(onePoint);
             }
         }
@@ -74,9 +75,11 @@ var PicReturn = /** @class */ (function () {
     PicReturn.prototype.changePointColor = function (pointArr, currentIndex) {
         for (var _i = 0, pointArr_1 = pointArr; _i < pointArr_1.length; _i++) {
             var one = pointArr_1[_i];
-            one.classList.remove(this.pointSelectStyle);
+            // one.classList.remove(this.pointSelectStyle);
+            one.setAttribute("class", this.pointClassName);
         }
-        pointArr[currentIndex].classList.add(this.pointSelectStyle);
+        // pointArr[currentIndex].classList.add(this.pointSelectStyle);
+        pointArr[currentIndex].setAttribute("class", this.pointClassName + " " + this.pointSelectStyle);
     };
     PicReturn.prototype.pointGuideCommonMethod = function (i) {
         clearInterval(this.time);
