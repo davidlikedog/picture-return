@@ -74,8 +74,8 @@ class PicReturn {
             for (let i = 0; i < this.allPicture.length - 1; i++) {
                 this.pointsBox.appendChild(this.pointsBox.childNodes[1]);
                 let onePoint: any = document.createElement('div');
-                // onePoint.classList.add(pointClassName);
-                onePoint.setAttribute("class", this.pointClassName);
+                // onePoint.classList.add(this.pointClassName);
+                onePoint.setAttribute("class", this.pointClassName);  //ie9
                 this.pointsBox.appendChild(onePoint);
             }
         }
@@ -84,10 +84,10 @@ class PicReturn {
     changePointColor(pointArr, currentIndex) {
         for (let one of pointArr) {
             // one.classList.remove(this.pointSelectStyle);
-            one.setAttribute("class", this.pointClassName);
+            one.setAttribute("class", this.pointClassName);  //ie9
         }
         // pointArr[currentIndex].classList.add(this.pointSelectStyle);
-        pointArr[currentIndex].setAttribute("class", `${this.pointClassName} ${this.pointSelectStyle}`);
+        pointArr[currentIndex].setAttribute("class", `${this.pointClassName} ${this.pointSelectStyle}`); //ie9
     }
 
     pointGuideCommonMethod(i) {

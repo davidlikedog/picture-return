@@ -66,8 +66,8 @@ var PicReturn = /** @class */ (function () {
             for (var i = 0; i < this.allPicture.length - 1; i++) {
                 this.pointsBox.appendChild(this.pointsBox.childNodes[1]);
                 var onePoint = document.createElement('div');
-                // onePoint.classList.add(pointClassName);
-                onePoint.setAttribute("class", this.pointClassName);
+                // onePoint.classList.add(this.pointClassName);
+                onePoint.setAttribute("class", this.pointClassName); //ie9
                 this.pointsBox.appendChild(onePoint);
             }
         }
@@ -76,10 +76,10 @@ var PicReturn = /** @class */ (function () {
         for (var _i = 0, pointArr_1 = pointArr; _i < pointArr_1.length; _i++) {
             var one = pointArr_1[_i];
             // one.classList.remove(this.pointSelectStyle);
-            one.setAttribute("class", this.pointClassName);
+            one.setAttribute("class", this.pointClassName); //ie9
         }
         // pointArr[currentIndex].classList.add(this.pointSelectStyle);
-        pointArr[currentIndex].setAttribute("class", this.pointClassName + " " + this.pointSelectStyle);
+        pointArr[currentIndex].setAttribute("class", this.pointClassName + " " + this.pointSelectStyle); //ie9
     };
     PicReturn.prototype.pointGuideCommonMethod = function (i) {
         clearInterval(this.time);
