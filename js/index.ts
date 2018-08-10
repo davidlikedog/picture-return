@@ -166,6 +166,7 @@ class PicReturn {
 
     mouseDirection() {
         this.pictureBox.onmousedown = (event) => {
+            event.preventDefault();
             if (event.buttons === 1) {
                 this.down(event, this.time);
             }
@@ -184,6 +185,7 @@ class PicReturn {
         };
 
         this.pictureBox.ontouchstart = (event) => {
+            event.preventDefault();
             this.down(event, this.time, true);
         };
         this.pictureBox.ontouchmove = (event) => {

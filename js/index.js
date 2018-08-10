@@ -168,6 +168,7 @@ var PicReturn = /** @class */ (function () {
     PicReturn.prototype.mouseDirection = function () {
         var _this = this;
         this.pictureBox.onmousedown = function (event) {
+            event.preventDefault();
             if (event.buttons === 1) {
                 _this.down(event, _this.time);
             }
@@ -185,6 +186,7 @@ var PicReturn = /** @class */ (function () {
             }
         };
         this.pictureBox.ontouchstart = function (event) {
+            event.preventDefault();
             _this.down(event, _this.time, true);
         };
         this.pictureBox.ontouchmove = function (event) {
